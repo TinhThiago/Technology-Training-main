@@ -10,6 +10,8 @@ import { promptEngineeringMaterials } from './materials/promptEngineering';
 import { otherKnowledgeMaterials } from './materials/otherKnowledge';
 import { fabricMaterials } from './materials/fabric';
 import { pcfMaterials } from './materials/pcf';
+import { pluginMaterials } from './materials/plugin';
+import { azurefunctionMaterials } from './materials/azurefunction';
 
 export const TRAINING_MATERIALS: Record<string, string> = {
   ...modelDrivenAppsMaterials,
@@ -23,4 +25,6 @@ export const TRAINING_MATERIALS: Record<string, string> = {
   ...otherKnowledgeMaterials,
   ...fabricMaterials,
   ...pcfMaterials,
+  ...pluginMaterials,
+  ...azurefunctionMaterials,
 };
