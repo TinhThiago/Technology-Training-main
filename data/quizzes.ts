@@ -11,6 +11,8 @@ import { promptEngineeringQuizzes } from './quizzes/promptEngineering';
 import { otherKnowledgeQuizzes } from './quizzes/otherKnowledge';
 import { fabricQuizzes } from './quizzes/fabric';
 import { pcfQuizzes } from './quizzes/pcf';
+import { pluginQuizzes } from './quizzes/plugin';
+import { azurefunctionQuizzes } from './quizzes/azurefunction';
 
 export const TRAINING_QUIZZES: Record<string, Quiz> = {
   ...modelDrivenAppsQuizzes,
@@ -24,4 +26,6 @@ export const TRAINING_QUIZZES: Record<string, Quiz> = {
   ...otherKnowledgeQuizzes,
   ...fabricQuizzes,
   ...pcfQuizzes,
+  ...pluginQuizzes,
+  ...azurefunctionQuizzes
 };
