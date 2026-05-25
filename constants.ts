@@ -170,6 +170,8 @@ export const MODULES: Module[] = [
       { id: 'ok-performance', title: 'Tối ưu hiệu năng ứng dụng lớn', keywords: ['Performance', 'Large Apps', 'Architecture', 'Best Practices', 'Monitoring'] },
       { id: 'ok-fabric-db', title: 'Storage data - Fabric', keywords: ['Fabric', 'Warehouse', 'Lakehouse', 'Eventhouse', 'SQL Database', 'Cosmos DB'] },
       { id: 'ok-pcf', title: 'Power Apps Code Components (PCF)', keywords: ['PCF', 'Control', 'Lifecycle', 'Tooling', 'Dataset', 'Architecture'] },
+      { id: 'ok-plugin', title: 'Plugin Dataverse', keywords: ['Plugin'] },
+      { id: 'ok-azurefunction', title: 'Azure Function', keywords: ['Azure Function', 'Serverless', 'Trigger', 'Binding'] },
       { id: 'ok-git', title: 'Quản lý phiên bản với Git', keywords: ['Git', 'Version Control', 'CI/CD', 'Repository'] },
       { id: 'ok-agile', title: 'Agile và Scrum', keywords: ['Agile', 'Scrum', 'Project Management', 'Sprints'] },
     ],
