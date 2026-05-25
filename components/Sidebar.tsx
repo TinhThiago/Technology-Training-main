@@ -26,10 +26,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside className="w-80 bg-white dark:bg-secondary/50 border-r border-gray-200 dark:border-border/50 flex flex-col">
-      <div className="h-16 flex items-center px-6 border-b border-gray-200 dark:border-border/50">
+      <button
+        onClick={() => onSelect('none', null)}
+        className="h-16 w-full flex items-center px-6 border-b border-gray-200 dark:border-border/50 hover:bg-gray-100 dark:hover:bg-muted transition-colors"
+      >
         <PowerAppsIcon className="h-8 w-8" />
-        <h1 className="ml-3 text-lg font-semibold text-gray-800 dark:text-foreground">Power Platform</h1>
-      </div>
+
+        <h1 className="ml-3 text-lg font-semibold text-gray-800 dark:text-foreground">
+          Power Platform
+        </h1>
+      </button>
       <nav className="flex-1 px-4 py-4 overflow-y-auto">
         <details className="group" open>
           <summary className="flex items-center justify-between p-2 list-none cursor-pointer rounded-md hover:bg-gray-100 dark:hover:bg-muted/50 focus:outline-none">
@@ -46,8 +52,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onSelect('module', module);
                   }}
                   className={`flex items-center px-3 py-2.5 text-sm font-medium rounded-md transition-colors duration-150 ${isModuleActive(module)
-                      ? 'bg-primary text-primary-foreground shadow-sm'
-                      : 'text-gray-600 dark:text-foreground hover:bg-gray-200 dark:hover:bg-muted'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-gray-600 dark:text-foreground hover:bg-gray-200 dark:hover:bg-muted'
                     }`}
                 >
                   <module.icon className="h-5 w-5 mr-3" />
@@ -73,8 +79,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onSelect('table', table);
                   }}
                   className={`flex items-center px-3 py-2.5 text-sm font-medium rounded-md transition-colors duration-150 ${isTableActive(table)
-                      ? 'bg-primary text-primary-foreground shadow-sm'
-                      : 'text-gray-600 dark:text-foreground hover:bg-gray-200 dark:hover:bg-muted'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-gray-600 dark:text-foreground hover:bg-gray-200 dark:hover:bg-muted'
                     }`}
                 >
                   <table.icon className="h-5 w-5 mr-3" />
@@ -100,8 +106,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onSelect('mockup', subTopic);
                   }}
                   className={`flex items-center px-3 py-2.5 text-sm font-medium rounded-md transition-colors duration-150 ${isMockupActive(subTopic)
-                      ? 'bg-primary text-primary-foreground shadow-sm'
-                      : 'text-gray-600 dark:text-foreground hover:bg-gray-200 dark:hover:bg-muted'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-gray-600 dark:text-foreground hover:bg-gray-200 dark:hover:bg-muted'
                     }`}
                 >
                   <mockupApp.icon className="h-5 w-5 mr-3" />
