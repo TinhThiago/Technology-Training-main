@@ -29,14 +29,14 @@ const chatData = [
 const PrintHeader: React.FC = () => (
   <header className="flex justify-between items-start pb-6 border-b dark:border-border">
     <div>
-      <h2 className="text-2xl font-bold">WESHOP</h2>
-      <p className="text-xs mt-2">Địa chỉ: Lô B39 Khu công nghiệp Phú Tài, phường Trần Quang Diệu, Quy Nhơn, Bình Định</p>
-      <p className="text-xs">Số điện thoại: 037 833 9009</p>
-      <p className="text-xs">MST: 4101562154</p>
-      <p className="text-xs">Website: https://wecare.com.vn</p>
+      <h2 className="text-2xl font-bold">TinhDV</h2>
+      <p className="text-xs mt-2">Địa chỉ: TpHCM</p>
+      <p className="text-xs">Số điện thoại: 0123456789</p>
+      <p className="text-xs">MST: XXXXXXXXXX</p>
+      <p className="text-xs">Website: https://tinhdv.com.vn</p>
     </div>
     <div className="text-right">
-      <p className="text-sm">Quy Nhơn, ngày 01 tháng 4 năm 2025</p>
+      <p className="text-sm">TpHCM, ngày 01 tháng 4 năm 2026</p>
     </div>
   </header>
 );
