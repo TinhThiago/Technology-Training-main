@@ -52,6 +52,10 @@ PCF (Power Apps Component Framework) cho phép các nhà phát triển tạo ra 
 'ok-plugin': `
 ## Plugin trên Dataverse
 Plugin là đoạn code C# chạy trên Dataverse để xử lý logic nghiệp vụ nâng cao khi dữ liệu được tạo, sửa, xóa hoặc gán quyền.
+`, 
+'ok-azurefunction': `
+## Azure Function
+Azure Function là dịch vụ serverless của Microsoft Azure, cho phép chạy code theo sự kiện mà không cần quản lý server.
 `,
   'ok-git': `
 ## Quản lý phiên bản với Git
