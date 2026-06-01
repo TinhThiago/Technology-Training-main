@@ -51,7 +51,9 @@ export interface AppTable {
 
 export type SelectionType = 'module' | 'table' | 'mockup' | 'none';
 
-export interface Selection {
-  type: SelectionType;
-  data: Module | AppTable | SubTopic | null;
-}
+// Đã thay đổi: Sử dụng discriminated union cho kiểu Selection
+export type Selection = 
+  | { type: 'module'; data: Module | null }
+  | { type: 'table'; data: AppTable | null }
+  | { type: 'mockup'; data: SubTopic | null }
+  | { type: 'none'; data: null };

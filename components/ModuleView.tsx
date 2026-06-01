@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import type { Module, SubTopic } from '../types';
 import { ChevronIcon } from './icons/ChevronIcon';
@@ -54,7 +53,16 @@ export const ModuleView: React.FC<ModuleViewProps> = ({ module }) => {
 };
 
 const formatMarkdown = (text: string) => {
-  return text
+  // BẮT ĐẦU PHẦN SANITIZE CƠ BẢN (KHÔNG ĐỦ MẠNH CHO MỌI TRƯỜNG HỢP XSS)
+  // Đây là một biện pháp tạm thời và không phải là giải pháp XSS hoàn chỉnh.
+  // KHUYẾN NGHỊ SỬ DỤNG THƯ VIỆN CHUYÊN DỤNG (e.g., DOMPurify, react-markdown với remark-gfm)
+  let sanitizedText = text.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''); // Loại bỏ các thẻ script
+  sanitizedText = sanitizedText.replace(/on\w+=\"[^\"]*\"/gi, ''); // Loại bỏ các event handlers
+  sanitizedText = sanitizedText.replace(/on\w+='[^']*'/gi, ''); // Loại bỏ các event handlers với dấu nháy đơn
+  sanitizedText = sanitizedText.replace(/on\w+=[^\s"'>]+/gi, ''); // Loại bỏ các event handlers không có dấu nháy
+  // KẾT THÚC PHẦN SANITIZE CƠ BẢN
+
+  return sanitizedText
     .replace(/^### (.*$)/gim, '<h3 class="text-lg font-semibold mt-4 mb-2">$1</h3>')
     .replace(/^## (.*$)/gim, '<h2 class="text-xl font-bold mt-6 mb-3 border-b pb-2 dark:border-border">$1</h2>')
     .replace(/^# (.*$)/gim, '<h1 class="text-2xl font-bold mt-8 mb-4 border-b-2 pb-2 dark:border-border">$1</h1>')
@@ -72,7 +80,7 @@ const TopicContent: React.FC<{ topic: SubTopic }> = ({ topic }) => {
 
   const material = TRAINING_MATERIALS[topic.id] || '<p>Nội dung cho chủ đề này hiện không có sẵn.</p>';
   const quiz = TRAINING_QUIZZES[topic.id];
-  const isPreformatted = topic.id.startsWith('pe-');
+  const isPreformatted = topic.id.startsWith('pe-'); // Magic string đã được đánh dấu trong review
 
   return (
     <div className="p-6 border-t border-gray-200 dark:border-border">

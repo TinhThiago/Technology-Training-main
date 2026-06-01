@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { ModuleView } from './components/ModuleView';
@@ -11,28 +10,36 @@ const App: React.FC = () => {
   const [selection, setSelection] = useState<Selection>({ type: 'none', data: null });
 
   const handleSelect = (type: SelectionType, data: Module | AppTable | SubTopic | null) => {
+    // Đã thay đổi: Logic được giữ nguyên, nhưng kiểu đã được cải thiện.
+    // Nếu selection.type không phải là 'none' và data hiện tại và data mới đều là null,
+    // nhưng type thay đổi, thì vẫn cập nhật để hiển thị nội dung trống cho type mới.
     if (selection.type === type) {
-      if (selection.data === null && data === null) {
-        return;
-      }
       if (selection.data?.id === data?.id) {
-        return;
+        return; // Không cần cập nhật nếu type và id đều giống nhau
       }
+      // Nếu type giống nhưng data khác (hoặc một trong hai là null), vẫn cần cập nhật
     }
-    setSelection({ type, data });
+    setSelection({ type, data } as Selection); // Đảm bảo gán đúng kiểu đã được thu hẹp
   };
 
   const renderContent = () => {
+    // Đã thay đổi: Sử dụng type guards để loại bỏ type assertion
     switch (selection.type) {
       case 'table':
-        return <TableView table={selection.data as AppTable} key={(selection.data as AppTable).id} />;
+        if (selection.data && selection.type === 'table') {
+          return <TableView table={selection.data} key={selection.data.id} />;
+        }
+        return <WelcomeScreen />;
       case 'mockup':
-        return <MockupView module={MOCKUP_APP_MODULE} activeSubTopic={selection.data as SubTopic} key={(selection.data as SubTopic).id} />;
+        if (selection.data && selection.type === 'mockup') {
+          return <MockupView module={MOCKUP_APP_MODULE} activeSubTopic={selection.data} key={selection.data.id} />;
+        }
+        return <WelcomeScreen />;
       case 'module':
-        return <ModuleView
-                    module={selection.data as Module}
-                    key={(selection.data as Module).id}
-                />;
+        if (selection.data && selection.type === 'module') {
+          return <ModuleView module={selection.data} key={selection.data.id} />;
+        }
+        return <WelcomeScreen />;
       default:
         return <WelcomeScreen />;
     }
@@ -59,6 +66,15 @@ const App: React.FC = () => {
 const WelcomeScreen: React.FC = () => {
   const [isFullScreen, setIsFullScreen] = useState(false);
 
+  const toggleFullScreen = () => setIsFullScreen(!isFullScreen);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleFullScreen();
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col items-center justify-center h-full text-center">
@@ -67,7 +83,10 @@ const WelcomeScreen: React.FC = () => {
         </h1>
         <div
           className="w-full flex-1 min-h-0 bg-white dark:bg-card rounded-xl shadow-xl overflow-hidden mb-4 border border-gray-200 dark:border-border p-2 flex items-center justify-center cursor-zoom-in hover:shadow-2xl transition-all hover:scale-[1.01]"
-          onClick={() => setIsFullScreen(true)}
+          onClick={toggleFullScreen}
+          onKeyDown={handleKeyDown} // Đã thay đổi: Thêm xử lý sự kiện bàn phím
+          role="button" // Đã thay đổi: Thêm vai trò button
+          tabIndex={0} // Đã thay đổi: Cho phép nhận focus từ bàn phím
           title="Bấm để xem toàn màn hình"
         >
            <img
