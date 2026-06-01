@@ -68,10 +68,15 @@ const WelcomeScreen: React.FC = () => {
 
   const toggleFullScreen = () => setIsFullScreen(!isFullScreen);
 
+  // Handle keydown events for fullscreen toggle and exit
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       toggleFullScreen();
+    } else if (e.key === 'Escape' && isFullScreen) {
+      // Đã thay đổi: Cho phép thoát fullscreen bằng phím Escape
+      e.preventDefault();
+      setIsFullScreen(false);
     }
   };
 
@@ -84,9 +89,9 @@ const WelcomeScreen: React.FC = () => {
         <div
           className="w-full flex-1 min-h-0 bg-white dark:bg-card rounded-xl shadow-xl overflow-hidden mb-4 border border-gray-200 dark:border-border p-2 flex items-center justify-center cursor-zoom-in hover:shadow-2xl transition-all hover:scale-[1.01]"
           onClick={toggleFullScreen}
-          onKeyDown={handleKeyDown} // Đã thay đổi: Thêm xử lý sự kiện bàn phím
-          role="button" // Đã thay đổi: Thêm vai trò button
-          tabIndex={0} // Đã thay đổi: Cho phép nhận focus từ bàn phím
+          onKeyDown={handleKeyDown} 
+          role="button" 
+          tabIndex={0} 
           title="Bấm để xem toàn màn hình"
         >
            <img
@@ -104,6 +109,8 @@ const WelcomeScreen: React.FC = () => {
         <div
           className="fixed inset-0 z-[100] bg-black bg-opacity-95 flex items-center justify-center p-4 backdrop-blur-sm transition-all animate-in fade-in duration-200"
           onClick={() => setIsFullScreen(false)}
+          tabIndex={0}
+          onKeyDown={handleKeyDown} // Đảm bảo event listener cho Esc vẫn hoạt động trong fullscreen
         >
           <div className="relative w-full h-full flex items-center justify-center">
             <img
@@ -114,9 +121,10 @@ const WelcomeScreen: React.FC = () => {
             <button
               className="absolute top-4 right-4 text-white/80 hover:text-white bg-black/50 hover:bg-black/80 rounded-full p-2 transition-colors focus:outline-none"
               onClick={(e) => {
-                e.stopPropagation();
+                e.stopPropagation(); // Ngăn chặn sự kiện click lan lên div cha
                 setIsFullScreen(false);
               }}
+              aria-label="Đóng"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

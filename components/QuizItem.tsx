@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import type { QuizQuestion } from '../types';
 
@@ -50,11 +49,12 @@ export const QuizItem: React.FC<QuizItemProps> = ({ question, index }) => {
         ))}
       </div>
       {isAnswered && (
-        <div className={`mt-4 p-3 rounded-md text-sm ${
-            selectedOption === question.correctAnswer
-                ? 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200'
-                : 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-200'
+        <div 
+          className={`mt-4 p-3 rounded-md text-sm ${ selectedOption === question.correctAnswer
+              ? 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200'
+              : 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-200'
             }`}
+          aria-live="polite" // Đã thay đổi: Thông báo kết quả cho trình đọc màn hình
         >
           <strong className="font-bold">
             {selectedOption === question.correctAnswer ? 'Correct!' : 'Incorrect.'}

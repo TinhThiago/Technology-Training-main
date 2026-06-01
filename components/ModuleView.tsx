@@ -4,6 +4,7 @@ import { ChevronIcon } from './icons/ChevronIcon';
 import { QuizItem } from './QuizItem';
 import { TRAINING_MATERIALS } from '../data/materials';
 import { TRAINING_QUIZZES } from '../data/quizzes';
+import DOMPurify from 'dompurify';
 
 interface ModuleViewProps {
   module: Module;
@@ -39,9 +40,7 @@ export const ModuleView: React.FC<ModuleViewProps> = ({ module }) => {
             >
               <h2 className="text-lg font-semibold text-gray-800 dark:text-foreground">{topic.title}</h2>
               <ChevronIcon
-                className={`w-5 h-5 text-gray-500 transform transition-transform ${
-                  activeTopic?.id === topic.id ? 'rotate-180' : ''
-                }`}
+                className={`w-5 h-5 text-gray-500 transform transition-transform ${ activeTopic?.id === topic.id ? 'rotate-180' : '' }`}
               />
             </button>
             {activeTopic?.id === topic.id && <TopicContent topic={activeTopic} />}
@@ -53,20 +52,13 @@ export const ModuleView: React.FC<ModuleViewProps> = ({ module }) => {
 };
 
 const formatMarkdown = (text: string) => {
-  // BẮT ĐẦU PHẦN SANITIZE CƠ BẢN (KHÔNG ĐỦ MẠNH CHO MỌI TRƯỜNG HỢP XSS)
-  // Đây là một biện pháp tạm thời và không phải là giải pháp XSS hoàn chỉnh.
-  // KHUYẾN NGHỊ SỬ DỤNG THƯ VIỆN CHUYÊN DỤNG (e.g., DOMPurify, react-markdown với remark-gfm)
-  let sanitizedText = text.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''); // Loại bỏ các thẻ script
-  sanitizedText = sanitizedText.replace(/on\w+=\"[^\"]*\"/gi, ''); // Loại bỏ các event handlers
-  sanitizedText = sanitizedText.replace(/on\w+='[^']*'/gi, ''); // Loại bỏ các event handlers với dấu nháy đơn
-  sanitizedText = sanitizedText.replace(/on\w+=[^\s"'>]+/gi, ''); // Loại bỏ các event handlers không có dấu nháy
-  // KẾT THÚC PHẦN SANITIZE CƠ BẢN
-
-  return sanitizedText
+  // Nội dung Markdown được coi là an toàn, không chứa script hoặc event handlers độc hại.
+  // Nếu nội dung đến từ nguồn không đáng tin cậy, cần sanitize kỹ lưỡng hơn.
+  return text
     .replace(/^### (.*$)/gim, '<h3 class="text-lg font-semibold mt-4 mb-2">$1</h3>')
     .replace(/^## (.*$)/gim, '<h2 class="text-xl font-bold mt-6 mb-3 border-b pb-2 dark:border-border">$1</h2>')
     .replace(/^# (.*$)/gim, '<h1 class="text-2xl font-bold mt-8 mb-4 border-b-2 pb-2 dark:border-border">$1</h1>')
-    .replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" class="max-w-full h-auto rounded-lg shadow-md my-4" />')
+    .replace(/![(.*?)]\((.*?)\)/g, '<img src="$2" alt="$1" class="max-w-full h-auto rounded-lg shadow-md my-4" />')
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.*?)\*/g, '<em>$1</em>')
     .replace(/`([^`]+)`/g, '<code class="bg-gray-200 dark:bg-muted rounded-md px-1.5 py-0.5 font-mono text-sm">$1</code>')
@@ -78,9 +70,14 @@ const formatMarkdown = (text: string) => {
 const TopicContent: React.FC<{ topic: SubTopic }> = ({ topic }) => {
   const [activeTab, setActiveTab] = useState<'material' | 'quiz'>('material');
 
-  const material = TRAINING_MATERIALS[topic.id] || '<p>Nội dung cho chủ đề này hiện không có sẵn.</p>';
+  const materialContent = TRAINING_MATERIALS[topic.id] || '<p>Nội dung cho chủ đề này hiện không có sẵn.</p>';
   const quiz = TRAINING_QUIZZES[topic.id];
-  const isPreformatted = topic.id.startsWith('pe-'); // Magic string đã được đánh dấu trong review
+  // Logic kiểm tra xem nội dung có cần được coi là preformatted hay không.
+  // Ví dụ: các ID bắt đầu bằng 'pe-' được coi là preformatted.
+  const isPreformatted = topic.id.startsWith('pe-'); 
+
+  // Sanitize nội dung HTML bằng DOMPurify nếu nó không phải là preformatted
+  const sanitizedMaterialHtml = isPreformatted ? materialContent : DOMPurify.sanitize(materialContent);
 
   return (
     <div className="p-6 border-t border-gray-200 dark:border-border">
@@ -88,20 +85,18 @@ const TopicContent: React.FC<{ topic: SubTopic }> = ({ topic }) => {
         <nav className="-mb-px flex space-x-6" aria-label="Tabs">
           <button
             onClick={() => setActiveTab('material')}
-            className={`${
-              activeTab === 'material'
-                ? 'border-primary text-primary'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-muted-foreground dark:hover:text-foreground'
+            className={`${ activeTab === 'material'
+              ? 'border-primary text-primary'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-muted-foreground dark:hover:text-foreground'
             } whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm`}
           >
             Documents
           </button>
           <button
             onClick={() => setActiveTab('quiz')}
-            className={`${
-              activeTab === 'quiz'
-                ? 'border-primary text-primary'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-muted-foreground dark:hover:text-foreground'
+            className={`${ activeTab === 'quiz'
+              ? 'border-primary text-primary'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-muted-foreground dark:hover:text-foreground'
             } whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm`}
           >
             Quizzes
@@ -111,7 +106,7 @@ const TopicContent: React.FC<{ topic: SubTopic }> = ({ topic }) => {
 
       <div>
         {activeTab === 'material' && (
-          <div className="prose prose-sm prose-blue dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: isPreformatted ? material : formatMarkdown(material) }} />
+          <div className="prose prose-sm prose-blue dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: sanitizedMaterialHtml }} />
         )}
         {activeTab === 'quiz' && (
           <div>

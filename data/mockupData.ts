@@ -66,13 +66,14 @@ export const xuatKhoData = [
 
 export const chatData = [
   {
-    from: 'ai',
-    text: '16 điểm “canh ngõ dẫn do”\n\nDẫn thường. Là kiểu lịch sử, tạo nhã, ngồi nghiêm chỉnh, “tôi giữ bài, không rút thêm”.\n\nDẫn do: Là khi 16 điểm vẫn còn muốn gỡ thêm, nhưng không rút bài.',
+    from: 'user',
+    text: 'Bài xì lát VN dằn 16 điểm được không?',
   },
   {
-    from: 'user',
-    text: 'Bài xì lát VN dẫn 16 điểm được không?',
-  },
+    from: 'ai',
+    text: '16 điểm “canh ngõ dằn dơ”\n\nbình thường. Là kiểu lịch sử, tạo nhã, ngồi nghiêm chỉnh, “tôi giữ bài, không rút thêm”.\n\nDằn do: Là khi 16 điểm vẫn còn muốn gỡ thêm, nhưng không rút bài.',
+  }
+  
 ];
 
 export const donBanData = [
