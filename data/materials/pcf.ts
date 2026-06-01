@@ -38,19 +38,19 @@ Một dự án PCF tiêu chuẩn bao gồm:
 ### Vòng đời Component (Lifecycle)
 Hiểu rõ vòng đời là yếu tố quan trọng nhất để xây dựng component ổn định.
 
-1.  **init**: Được gọi **một lần duy nhất** khi component được khởi tạo.
+**1.  init**: Được gọi **một lần duy nhất** khi component được khởi tạo.
     *   Dùng để khởi tạo state, gắn event handlers, load thư viện, và lưu tham chiếu container (div).
     *   *Lưu ý:* Chưa có dữ liệu tại bước này.
 
-2.  **updateView**: Được gọi **mỗi khi** có sự thay đổi từ host (dữ liệu thay đổi, kích thước màn hình đổi, v.v.).
+**2.  updateView**: Được gọi **mỗi khi** có sự thay đổi từ host (dữ liệu thay đổi, kích thước màn hình đổi, v.v.).
     *   Dùng để render lại UI với dữ liệu mới.
     *   *Tối ưu:* Cần so sánh dữ liệu cũ và mới để tránh render lại toàn bộ (re-render) gây chậm app.
 
-3.  **getOutputs**: Được gọi bởi Host trước khi lưu dữ liệu.
+**3.  getOutputs**: Được gọi bởi Host trước khi lưu dữ liệu.
     *   Component trả về đối tượng chứa các giá trị mới nhất để Host cập nhật vào Dataverse.
     *   Thường được kích hoạt sau khi code gọi \`notifyOutputChanged\`.
 
-4.  **destroy**: Được gọi trước khi component bị gỡ bỏ khỏi DOM.
+**4.  destroy**: Được gọi trước khi component bị gỡ bỏ khỏi DOM.
     *   Dùng để dọn dẹp (clean up): gỡ bỏ event listeners, hủy các timer, giải phóng bộ nhớ để tránh Memory Leak.
 
 ### Giao tiếp với Host

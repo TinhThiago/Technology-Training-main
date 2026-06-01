@@ -47,18 +47,18 @@ HTML Web Resources cho phép bạn nhúng các trang web tùy chỉnh trực ti�
 ### Kịch bản: Tạo nút "In" và Form in tùy chỉnh
 *   **Mục tiêu:** Tạo một nút "In đơn hàng" trên form "Đơn bán". Khi nhấn vào, nút này sẽ mở ra một trang HTML hiển thị thông tin của đơn bán đó theo một định dạng in ấn tùy chỉnh.
 *   **Các bước:**
-    1.  **Tạo HTML Web Resource:**
+    **1.  Tạo HTML Web Resource:**
         *   Thiết kế một trang HTML (ví dụ: \`print_form.html\`) với bố cục và CSS theo ý muốn.
         *   Trong file HTML, thêm một file JavaScript tham chiếu đến \`ClientGlobalContext.js.aspx\`. Điều này cho phép bạn truy cập dữ liệu từ Power Apps.
         *   Viết mã JavaScript trong trang HTML để lấy ID của bản ghi hiện tại từ query string.
         *   Sử dụng \`Xrm.WebApi.retrieveRecord()\` để lấy tất cả dữ liệu cần thiết của đơn bán.
         *   Dùng JavaScript để điền dữ liệu này vào các phần tử HTML tương ứng trên trang.
 
-    2.  **Tùy chỉnh Command Bar:**
+    **2.  Tùy chỉnh Command Bar:**
         *   Sử dụng Ribbon Workbench để thêm một nút mới tên là "In đơn hàng" vào command bar của form "Đơn bán".
         *   Cấu hình hành động cho nút này là "Open URL".
         *   Trong URL, trỏ đến HTML Web Resource đã tạo. Quan trọng là bạn cần truyền ID của bản ghi hiện tại vào URL dưới dạng tham số.
 
-    3.  **Kết quả:** Khi người dùng mở một đơn bán và nhấn nút "In đơn hàng", một cửa sổ mới sẽ hiện ra với trang HTML của bạn, hiển thị dữ liệu của chính đơn bán đó, sẵn sàng để in.
+    **3.  Kết quả:** Khi người dùng mở một đơn bán và nhấn nút "In đơn hàng", một cửa sổ mới sẽ hiện ra với trang HTML của bạn, hiển thị dữ liệu của chính đơn bán đó, sẵn sàng để in.
   `,
 };
