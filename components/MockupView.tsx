@@ -71,7 +71,7 @@ const DonBanPrintMockup: React.FC = () => {
                 </div>
             </section>
             <table className="w-full text-xs border-collapse border border-gray-400 dark:border-border">
-                <thead className="bg-gray-100 dark:bg-secondary text-foreground">
+                <thead className="bg-gray-100 text-gray-900 font-semibold">
                     <tr>
                         <th className="border border-gray-300 dark:border-border p-2">STT</th>
                         <th className="border border-gray-300 dark:border-border p-2">Tên sản phẩm</th>
@@ -122,7 +122,7 @@ const XuatKhoPrintMockup: React.FC = () => (
                 <p className="text-sm mt-1">Ngày xuất: {new Date().toLocaleDateString('vi-VN')}</p>
             </div>
             <table className="w-full text-xs border-collapse border border-gray-400 dark:border-border">
-                <thead className="bg-gray-100 dark:bg-secondary text-foreground">
+                <thead className="bg-gray-100 text-gray-900 font-semibold">
                     <tr>
                         <th className="border border-gray-300 dark:border-border p-2">STT</th>
                         <th className="border border-gray-300 dark:border-border p-2 text-left">Tên hàng</th>
@@ -155,7 +155,7 @@ const XuatKhoMockup: React.FC = () => (
                 <p className="text-sm mt-1">Ngày xuất: {new Date().toLocaleDateString('vi-VN')}</p>
             </div>
             <table className="w-full text-xs border-collapse border border-gray-400 dark:border-border">
-                <thead className="bg-gray-100 dark:bg-secondary text-foreground">
+                <thead className="bg-gray-100 text-gray-900 font-semibold">
                     <tr>
                         <th className="border border-gray-300 dark:border-border p-2">STT</th>
                         <th className="border border-gray-300 dark:border-border p-2 text-left">Tên hàng</th>
