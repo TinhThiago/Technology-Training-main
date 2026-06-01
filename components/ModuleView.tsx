@@ -51,14 +51,10 @@ export const ModuleView: React.FC<ModuleViewProps> = ({ module }) => {
   );
 };
 
-const escapeHtml = (value: string) =>
-  value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+
 
 const formatInlineMarkdown = (text: string) => {
-  return escapeHtml(text)
+  return text
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.*?)\*/g, '<em>$1</em>')
     .replace(
@@ -101,7 +97,12 @@ const formatMarkdown = (text: string) => {
       closeTable();
       continue;
     }
-
+    if (line.startsWith('<')) {
+      closeLists();
+      closeTable();
+      html += rawLine;
+      continue;
+    }
     if (line.startsWith('|') && line.endsWith('|')) {
       closeLists();
 
@@ -214,8 +215,8 @@ const TopicContent: React.FC<{ topic: SubTopic }> = ({ topic }) => {
 
   // Sanitize nội dung HTML bằng DOMPurify nếu nó không phải là preformatted
   const sanitizedMaterialHtml = isPreformatted
-  ? DOMPurify.sanitize(materialContent)
-  : DOMPurify.sanitize(formatMarkdown(materialContent));
+    ? DOMPurify.sanitize(materialContent)
+    : DOMPurify.sanitize(formatMarkdown(materialContent));
 
   return (
     <div className="p-6 border-t border-gray-200 dark:border-border">
