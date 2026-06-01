@@ -40,7 +40,7 @@ export const ModuleView: React.FC<ModuleViewProps> = ({ module }) => {
             >
               <h2 className="text-lg font-semibold text-gray-800 dark:text-foreground">{topic.title}</h2>
               <ChevronIcon
-                className={`w-5 h-5 text-gray-500 transform transition-transform ${ activeTopic?.id === topic.id ? 'rotate-180' : '' }`}
+                className={`w-5 h-5 text-gray-500 transform transition-transform ${activeTopic?.id === topic.id ? 'rotate-180' : ''}`}
               />
             </button>
             {activeTopic?.id === topic.id && <TopicContent topic={activeTopic} />}
@@ -51,20 +51,156 @@ export const ModuleView: React.FC<ModuleViewProps> = ({ module }) => {
   );
 };
 
-const formatMarkdown = (text: string) => {
-  // Nội dung Markdown được coi là an toàn, không chứa script hoặc event handlers độc hại.
-  // Nếu nội dung đến từ nguồn không đáng tin cậy, cần sanitize kỹ lưỡng hơn.
-  return text
-    .replace(/^### (.*$)/gim, '<h3 class="text-lg font-semibold mt-4 mb-2">$1</h3>')
-    .replace(/^## (.*$)/gim, '<h2 class="text-xl font-bold mt-6 mb-3 border-b pb-2 dark:border-border">$1</h2>')
-    .replace(/^# (.*$)/gim, '<h1 class="text-2xl font-bold mt-8 mb-4 border-b-2 pb-2 dark:border-border">$1</h1>')
-    .replace(/![(.*?)]\((.*?)\)/g, '<img src="$2" alt="$1" class="max-w-full h-auto rounded-lg shadow-md my-4" />')
+const escapeHtml = (value: string) =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+const formatInlineMarkdown = (text: string) => {
+  return escapeHtml(text)
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.*?)\*/g, '<em>$1</em>')
-    .replace(/`([^`]+)`/g, '<code class="bg-gray-200 dark:bg-muted rounded-md px-1.5 py-0.5 font-mono text-sm">$1</code>')
-    .replace(/^\* (.*$)/gim, '<li class="ml-6 my-1">$1</li>')
-    .replace(/(<li>.*<\/li>)/gs, '<ul class="list-disc pl-5 mb-4">$1</ul>')
-    .replace(/\n/g, '<br />');
+    .replace(
+      /`([^`]+)`/g,
+      '<code class="bg-gray-100 rounded px-1 py-0.5 text-sm font-mono">$1</code>'
+    );
+};
+
+const formatMarkdown = (text: string) => {
+  const lines = text.split('\n');
+  let html = '';
+  let inUl = false;
+  let inOl = false;
+  let inTable = false;
+
+  const closeLists = () => {
+    if (inUl) {
+      html += '</ul>';
+      inUl = false;
+    }
+    if (inOl) {
+      html += '</ol>';
+      inOl = false;
+    }
+  };
+
+  const closeTable = () => {
+    if (inTable) {
+      html += '</tbody></table></div>';
+      inTable = false;
+    }
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const rawLine = lines[i];
+    const line = rawLine.trim();
+
+    if (!line) {
+      closeLists();
+      closeTable();
+      continue;
+    }
+
+    if (line.startsWith('|') && line.endsWith('|')) {
+      closeLists();
+
+      const cells = line
+        .split('|')
+        .slice(1, -1)
+        .map((cell) => cell.trim());
+
+      const isSeparator = cells.every((cell) => /^:?-{3,}:?$/.test(cell));
+
+      if (isSeparator) {
+        continue;
+      }
+
+      const nextLine = lines[i + 1]?.trim() || '';
+      const nextCells = nextLine
+        .split('|')
+        .slice(1, -1)
+        .map((cell) => cell.trim());
+
+      const nextIsSeparator =
+        nextLine.startsWith('|') &&
+        nextLine.endsWith('|') &&
+        nextCells.every((cell) => /^:?-{3,}:?$/.test(cell));
+
+      if (!inTable) {
+        html +=
+          '<div class="my-4 overflow-x-auto"><table class="w-full border-collapse text-sm">';
+        inTable = true;
+      }
+
+      if (nextIsSeparator) {
+        html += '<thead><tr>';
+        cells.forEach((cell) => {
+          html += `<th class="border border-gray-300 bg-gray-50 px-3 py-2 text-left font-semibold">${formatInlineMarkdown(cell)}</th>`;
+        });
+        html += '</tr></thead><tbody>';
+        i++;
+      } else {
+        html += '<tr>';
+        cells.forEach((cell) => {
+          html += `<td class="border border-gray-300 px-3 py-2">${formatInlineMarkdown(cell)}</td>`;
+        });
+        html += '</tr>';
+      }
+
+      continue;
+    }
+
+    closeTable();
+
+    if (line.startsWith('### ')) {
+      closeLists();
+      html += `<h3 class="mt-8 mb-3 text-lg font-bold text-gray-900">${formatInlineMarkdown(line.replace(/^### /, ''))}</h3>`;
+      continue;
+    }
+
+    if (line.startsWith('## ')) {
+      closeLists();
+      html += `<h2 class="mt-8 mb-4 text-xl font-bold text-gray-900">${formatInlineMarkdown(line.replace(/^## /, ''))}</h2>`;
+      continue;
+    }
+
+    if (line.startsWith('# ')) {
+      closeLists();
+      html += `<h1 class="mt-8 mb-4 text-2xl font-bold text-gray-900">${formatInlineMarkdown(line.replace(/^# /, ''))}</h1>`;
+      continue;
+    }
+
+    if (/^[-*]\s+/.test(line)) {
+      closeTable();
+      if (!inUl) {
+        closeLists();
+        html += '<ul class="my-4 list-disc space-y-3 pl-6">';
+        inUl = true;
+      }
+      html += `<li>${formatInlineMarkdown(line.replace(/^[-*]\s+/, ''))}</li>`;
+      continue;
+    }
+
+    if (/^\d+\.\s+/.test(line)) {
+      closeTable();
+      if (!inOl) {
+        closeLists();
+        html += '<ol class="my-4 list-decimal space-y-2 pl-6">';
+        inOl = true;
+      }
+      html += `<li>${formatInlineMarkdown(line.replace(/^\d+\.\s+/, ''))}</li>`;
+      continue;
+    }
+
+    closeLists();
+    html += `<p class="mb-4 leading-7 text-gray-800">${formatInlineMarkdown(line)}</p>`;
+  }
+
+  closeLists();
+  closeTable();
+
+  return html;
 };
 
 const TopicContent: React.FC<{ topic: SubTopic }> = ({ topic }) => {
@@ -74,7 +210,7 @@ const TopicContent: React.FC<{ topic: SubTopic }> = ({ topic }) => {
   const quiz = TRAINING_QUIZZES[topic.id];
   // Logic kiểm tra xem nội dung có cần được coi là preformatted hay không.
   // Ví dụ: các ID bắt đầu bằng 'pe-' được coi là preformatted.
-  const isPreformatted = topic.id.startsWith('pe-'); 
+  const isPreformatted = topic.id.startsWith('pe-');
 
   // Sanitize nội dung HTML bằng DOMPurify nếu nó không phải là preformatted
   const sanitizedMaterialHtml = isPreformatted ? materialContent : DOMPurify.sanitize(materialContent);
@@ -85,19 +221,19 @@ const TopicContent: React.FC<{ topic: SubTopic }> = ({ topic }) => {
         <nav className="-mb-px flex space-x-6" aria-label="Tabs">
           <button
             onClick={() => setActiveTab('material')}
-            className={`${ activeTab === 'material'
+            className={`${activeTab === 'material'
               ? 'border-primary text-primary'
               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-muted-foreground dark:hover:text-foreground'
-            } whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm`}
+              } whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm`}
           >
             Documents
           </button>
           <button
             onClick={() => setActiveTab('quiz')}
-            className={`${ activeTab === 'quiz'
+            className={`${activeTab === 'quiz'
               ? 'border-primary text-primary'
               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-muted-foreground dark:hover:text-foreground'
-            } whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm`}
+              } whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm`}
           >
             Quizzes
           </button>
@@ -106,7 +242,10 @@ const TopicContent: React.FC<{ topic: SubTopic }> = ({ topic }) => {
 
       <div>
         {activeTab === 'material' && (
-          <div className="prose prose-sm prose-blue dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: sanitizedMaterialHtml }} />
+          <div
+            className="max-w-none text-gray-900"
+            dangerouslySetInnerHTML={{ __html: sanitizedMaterialHtml }}
+          />
         )}
         {activeTab === 'quiz' && (
           <div>
