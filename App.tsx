@@ -109,6 +109,7 @@ const WelcomeScreen: React.FC = () => {
         <div
           className="fixed inset-0 z-[100] bg-black bg-opacity-95 flex items-center justify-center p-4 backdrop-blur-sm transition-all animate-in fade-in duration-200"
           onClick={() => setIsFullScreen(false)}
+          role="button"
           tabIndex={0}
           onKeyDown={handleKeyDown} // Đảm bảo event listener cho Esc vẫn hoạt động trong fullscreen
         >
