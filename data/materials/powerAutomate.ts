@@ -35,20 +35,20 @@ Sử dụng trigger **Recurrence** để chạy các tác vụ định kỳ.
 *   \`formatDateTime()\`: Định dạng ngày tháng.
 *   \`if()\`: Logic điều kiện.
 ## Training Filter Expressions
-*| Operator | Description |
-*|-----------|-------------|
-*| eq | Equal to |
-*| ne | Not equal to |
-*| contains | Contains |
-*| not contains | Does not contain |
-*| gt | Greater than |
-*| lt | Less than |
-*| ge | Greater than or equal to |
-*| le | Less than or equal to |
-*| and | And |
-*| or | Or |
-*| startswith | Start with the specified value |
-*| endswith | End with the specified value |
+| Operator | Description |
+|-----------|-------------|
+| eq | Equal to |
+| ne | Not equal to |
+| contains | Contains |
+| not contains | Does not contain |
+| gt | Greater than |
+| lt | Less than |
+| ge | Greater than or equal to |
+| le | Less than or equal to |
+| and | And |
+| or | Or |
+| startswith | Start with the specified value |
+| endswith | End with the specified value |
   `,
   'pa-error-handling': `
 ## Xử lý lỗi
