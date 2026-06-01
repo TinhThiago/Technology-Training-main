@@ -213,7 +213,9 @@ const TopicContent: React.FC<{ topic: SubTopic }> = ({ topic }) => {
   const isPreformatted = topic.id.startsWith('pe-');
 
   // Sanitize nội dung HTML bằng DOMPurify nếu nó không phải là preformatted
-  const sanitizedMaterialHtml = isPreformatted ? materialContent : DOMPurify.sanitize(materialContent);
+  const sanitizedMaterialHtml = isPreformatted
+  ? DOMPurify.sanitize(materialContent)
+  : DOMPurify.sanitize(formatMarkdown(materialContent));
 
   return (
     <div className="p-6 border-t border-gray-200 dark:border-border">
