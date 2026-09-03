@@ -33,10 +33,10 @@ export const ModuleView: React.FC<ModuleViewProps> = ({ module }) => {
 
       <div className="space-y-4">
         {module.subTopics.map((topic) => (
-          <div key={topic.id} className="bg-white dark:bg-secondary rounded-lg shadow-sm overflow-hidden">
+          <div key={topic.id} className="bg-white dark:bg-secondary rounded-lg border border-gray-200 shadow-sm overflow-hidden">
             <button
               onClick={() => handleTopicSelect(topic)}
-              className="w-full text-left p-4 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-muted/50 focus:outline-none"
+              className="w-full text-left p-4 flex justify-between items-center bg-gray-100 hover:bg-gray-200 dark:bg-muted dark:hover:bg-muted/80 focus:outline-none transition-colors"
             >
               <h2 className="text-lg font-semibold text-gray-800 dark:text-foreground">{topic.title}</h2>
               <ChevronIcon
@@ -219,7 +219,7 @@ const TopicContent: React.FC<{ topic: SubTopic }> = ({ topic }) => {
     : DOMPurify.sanitize(formatMarkdown(materialContent));
 
   return (
-    <div className="p-6 border-t border-gray-200 dark:border-border">
+    <div className="p-6 bg-white border-t border-gray-200 dark:bg-secondary dark:border-border">
       <div className="border-b border-gray-200 dark:border-border mb-4">
         <nav className="-mb-px flex space-x-6" aria-label="Tabs">
           <button
