@@ -46,7 +46,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100 dark:bg-background text-gray-800 dark:text-foreground">
+    <div className="flex h-screen bg-white dark:bg-background text-gray-800 dark:text-foreground">
       <Sidebar
         modules={MODULES}
         tables={TABLES}
